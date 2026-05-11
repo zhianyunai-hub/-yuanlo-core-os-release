@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-REPO="zhianyunai-hub/yuanlo-core-os-release"
+REPO="zhianyunai-hub/-yuanlo-core-os-release"
 VERSION="${YUANLO_VERSION:-latest}"
 BIN_NAME="yuanlo-core-os"
 INSTALL_DIR="/usr/local/bin"
