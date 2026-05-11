@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-REPO="zhianyunai-hub/-nebula-core-os-release"
-VERSION="${NEBULA_VERSION:-latest}"
-BIN_NAME="nebula-core-os"
+REPO="zhianyunai-hub/yuanlo-core-os-release"
+VERSION="${YUANLO_VERSION:-latest}"
+BIN_NAME="yuanlo-core-os"
 INSTALL_DIR="/usr/local/bin"
-CONFIG_DIR="$HOME/.config/nebula-core-os"
+CONFIG_DIR="$HOME/.config/yuanlo-core-os"
 
 # ── Colors ──
 RED='\033[0;31m'; GREEN='\033[0;32m'; CYAN='\033[0;36m'; NC='\033[0m'
@@ -13,7 +13,7 @@ RED='\033[0;31m'; GREEN='\033[0;32m'; CYAN='\033[0;36m'; NC='\033[0m'
 banner() {
     echo ""
     echo -e "${CYAN}  ╔══════════════════════════════════════════╗${NC}"
-    echo -e "${CYAN}  ║       NebulaCore-OS Installer           ║${NC}"
+    echo -e "${CYAN}  ║       Yuanlo Core OS Installer           ║${NC}"
     echo -e "${CYAN}  ║       AI Employee OS v0.2.0             ║${NC}"
     echo -e "${CYAN}  ╚══════════════════════════════════════════╝${NC}"
     echo ""
@@ -27,7 +27,7 @@ banner
 
 case "$(uname -s)" in
     Linux)  PLATFORM="linux" ;;
-    *)      err "Unsupported OS. NebulaCore-OS currently supports Linux only." ;;
+    *)      err "Unsupported OS. Yuanlo Core OS currently supports Linux only." ;;
 esac
 
 ARCH="$(uname -m)"
@@ -96,16 +96,16 @@ echo ""
 read -rp "  Install systemd service (auto-start on boot)? [y/N] " INSTALL_SVC
 
 if [ "$INSTALL_SVC" = "y" ] || [ "$INSTALL_SVC" = "Y" ]; then
-    SERVICE_FILE="/etc/systemd/system/nebula-core-os.service"
+    SERVICE_FILE="/etc/systemd/system/yuanlo-core-os.service"
     sudo tee "$SERVICE_FILE" > /dev/null << SVC_EOF
 [Unit]
-Description=NebulaCore-OS AI Employee OS
+Description=Yuanlo Core OS AI Employee OS
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-Environment="NEBULA_CONFIG_DIR=$CONFIG_DIR"
+Environment="YUANLO_CONFIG_DIR=$CONFIG_DIR"
 EnvironmentFile=$CONFIG_DIR/.env
 ExecStart=$INSTALL_DIR/$BIN_NAME
 WorkingDirectory=$CONFIG_DIR
@@ -113,7 +113,7 @@ Restart=on-failure
 RestartSec=5
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=nebula-core-os
+SyslogIdentifier=yuanlo-core-os
 
 NoNewPrivileges=yes
 PrivateTmp=yes
@@ -123,23 +123,23 @@ MemoryMax=2G
 WantedBy=multi-user.target
 SVC_EOF
     sudo systemctl daemon-reload
-    sudo systemctl enable --now nebula-core-os
+    sudo systemctl enable --now yuanlo-core-os
     info "Service installed and running"
     echo ""
     echo -e "  Manage with:"
-    echo -e "    sudo systemctl status nebula-core-os"
-    echo -e "    sudo journalctl -u nebula-core-os -f"
+    echo -e "    sudo systemctl status yuanlo-core-os"
+    echo -e "    sudo journalctl -u yuanlo-core-os -f"
 else
     echo ""
     echo -e "  ${CYAN}Run manually:${NC}"
     echo ""
-    echo -e "    NEBULA_CONFIG_DIR=$CONFIG_DIR $INSTALL_DIR/$BIN_NAME"
+    echo -e "    YUANLO_CONFIG_DIR=$CONFIG_DIR $INSTALL_DIR/$BIN_NAME"
 fi
 
 # ── Done ──
 echo ""
 echo -e "${GREEN}  ══════════════════════════════════════════${NC}"
-echo -e "${GREEN}  NebulaCore-OS installed successfully!${NC}"
+echo -e "${GREEN}  Yuanlo Core OS installed successfully!${NC}"
 echo -e "${GREEN}  ══════════════════════════════════════════${NC}"
 echo ""
 echo -e "  Health:  curl http://localhost:8000/health"
