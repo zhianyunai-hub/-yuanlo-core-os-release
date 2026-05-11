@@ -71,28 +71,32 @@ mkdir -p "$CONFIG_DIR"
 
 if [ ! -f "$CONFIG_DIR/.env" ]; then
     cat > "$CONFIG_DIR/.env" << 'ENVEOF'
-OPENAI_API_KEY=sk-your-api-key-here
+LLM_PROVIDER=deepseek
+DEEPSEEK_API_KEY=
+DEEPSEEK_MODEL=deepseek-chat
+OPENAI_API_KEY=
 OPENAI_BASE_URL=
 OPENAI_MODEL=gpt-4o
+QQ_ENABLED=false
+QQ_ONEBOT_HOST=0.0.0.0
+QQ_ONEBOT_PORT=8090
+QQ_ONEBOT_ACCESS_TOKEN=
+PANEL_MODE=web
+SETUP_COMPLETED=false
 ENVEOF
-    echo ""
-    echo -e "  ${CYAN}Config file created at ${CONFIG_DIR}/.env${NC}"
-    echo -e "  ${CYAN}Edit it to set your API key:${NC}"
-    echo ""
-    echo -e "    vim ${CONFIG_DIR}/.env"
-    echo ""
-    read -rp "  Set API key now? [y/N] " SET_KEY
-    if [ "$SET_KEY" = "y" ] || [ "$SET_KEY" = "Y" ]; then
-        read -rp "  API Key: " API_KEY
-        sed -i "s/sk-your-api-key-here/$API_KEY/" "$CONFIG_DIR/.env"
-        info "API key configured"
-    fi
+    info "Config template created at $CONFIG_DIR/.env"
 else
     info "Config already exists: $CONFIG_DIR/.env"
 fi
 
-# ── Systemd service ──
+# ── Setup wizard prompt ──
 echo ""
+echo -e "  ${CYAN}Run the setup wizard to configure:${NC}"
+echo ""
+echo -e "    $INSTALL_DIR/$BIN_NAME setup"
+echo ""
+
+# ── Systemd service ──
 read -rp "  Install systemd service (auto-start on boot)? [y/N] " INSTALL_SVC
 
 if [ "$INSTALL_SVC" = "y" ] || [ "$INSTALL_SVC" = "Y" ]; then
@@ -107,7 +111,7 @@ Wants=network-online.target
 Type=simple
 Environment="YUANLO_CONFIG_DIR=$CONFIG_DIR"
 EnvironmentFile=$CONFIG_DIR/.env
-ExecStart=$INSTALL_DIR/$BIN_NAME
+ExecStart=$INSTALL_DIR/$BIN_NAME serve
 WorkingDirectory=$CONFIG_DIR
 Restart=on-failure
 RestartSec=5
@@ -123,17 +127,18 @@ MemoryMax=2G
 WantedBy=multi-user.target
 SVC_EOF
     sudo systemctl daemon-reload
-    sudo systemctl enable --now yuanlo-core-os
-    info "Service installed and running"
+    sudo systemctl enable yuanlo-core-os
+    info "Service installed (disabled by default, run: sudo systemctl start yuanlo-core-os)"
     echo ""
     echo -e "  Manage with:"
+    echo -e "    sudo systemctl start yuanlo-core-os"
     echo -e "    sudo systemctl status yuanlo-core-os"
     echo -e "    sudo journalctl -u yuanlo-core-os -f"
 else
     echo ""
     echo -e "  ${CYAN}Run manually:${NC}"
     echo ""
-    echo -e "    YUANLO_CONFIG_DIR=$CONFIG_DIR $INSTALL_DIR/$BIN_NAME"
+    echo -e "    YUANLO_CONFIG_DIR=$CONFIG_DIR $INSTALL_DIR/$BIN_NAME serve"
 fi
 
 # ── Done ──
