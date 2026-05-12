@@ -14,7 +14,7 @@ banner() {
     echo ""
     echo -e "${CYAN}  ╔══════════════════════════════════════════╗${NC}"
     echo -e "${CYAN}  ║       Yuanlo Core OS Installer           ║${NC}"
-    echo -e "${CYAN}  ║       AI Employee OS v0.2.0             ║${NC}"
+    echo -e "${CYAN}  ║       AI Employee OS v0.4.2             ║${NC}"
     echo -e "${CYAN}  ╚══════════════════════════════════════════╝${NC}"
     echo ""
 }
@@ -74,10 +74,17 @@ if [ ! -f "$CONFIG_DIR/.env" ]; then
 LLM_PROVIDER=deepseek
 DEEPSEEK_API_KEY=
 DEEPSEEK_MODEL=deepseek-chat
+CUSTOM_API_KEY=
+CUSTOM_BASE_URL=
+CUSTOM_MODEL=
 OPENAI_API_KEY=
 OPENAI_BASE_URL=
 OPENAI_MODEL=gpt-4o
+OLLAMA_BASE_URL=http://localhost:11434/v1
+OLLAMA_MODEL=llama3
+EMBEDDING_MODEL=text-embedding-3-small
 QQ_ENABLED=false
+QQ_PROTOCOL=onebot
 QQ_ONEBOT_HOST=0.0.0.0
 QQ_ONEBOT_PORT=8090
 QQ_ONEBOT_ACCESS_TOKEN=
@@ -93,6 +100,15 @@ DINGTALK_WEBHOOK_URL=
 DINGTALK_SECRET=
 DINGTALK_APP_KEY=
 DINGTALK_APP_SECRET=
+DATABASE_URL=sqlite+aiosqlite:///yuanlo.db
+HOST=127.0.0.1
+PORT=8000
+API_AUTH_ENABLED=true
+API_TOKEN=
+LOG_LEVEL=INFO
+LOG_FILE=logs/yuanlo.log
+LOG_ROTATION=10 MB
+CORS_ORIGINS=*
 ENVEOF
     info "Config template created at $CONFIG_DIR/.env"
 else
